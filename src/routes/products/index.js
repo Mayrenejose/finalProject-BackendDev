@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import ProductManager from '../../models/productManager/index.js'
+import checkExistingParameter from '../../middleware/checkExistingParameter/index.js'
 
 const router = Router()
 const productManager = new ProductManager()
@@ -22,7 +23,7 @@ router.get('/', async(req, res) => {
     }
 })
 
-router.get('/:pid', async(req, res) => {
+router.get('/:pid', checkExistingParameter, async(req, res) => {
     try{
         const data = await productManager.getAllProducts()
         const { pid } = req.params
@@ -54,7 +55,7 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.put('/:pid', async(req, res) => {
+router.put('/:pid', checkExistingParameter, async(req, res) => {
     try{
         const { pid } = req.params
         const bodyUpdate = req.body
@@ -67,7 +68,7 @@ router.put('/:pid', async(req, res) => {
     }
 })
 
-router.delete('/:pid', async (req, res) => {
+router.delete('/:pid', checkExistingParameter, async (req, res) => {
     try {
         const { pid } = req.params
 
