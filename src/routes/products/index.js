@@ -4,6 +4,7 @@ import checkExistingParameter from '../../middleware/checkExistingParameter/inde
 
 const router = Router()
 const productManager = new ProductManager()
+const validatorParams = checkExistingParameter('pid')
 
 router.get('/', async(req, res) => {
     try{
@@ -23,7 +24,7 @@ router.get('/', async(req, res) => {
     }
 })
 
-router.get('/:pid', checkExistingParameter, async(req, res) => {
+router.get('/:pid', validatorParams, async(req, res) => {
     try{
         const data = await productManager.getAllProducts()
         const { pid } = req.params
@@ -55,7 +56,7 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.put('/:pid', checkExistingParameter, async(req, res) => {
+router.put('/:pid', validatorParams, async(req, res) => {
     try{
         const { pid } = req.params
         const bodyUpdate = req.body
@@ -68,7 +69,7 @@ router.put('/:pid', checkExistingParameter, async(req, res) => {
     }
 })
 
-router.delete('/:pid', checkExistingParameter, async (req, res) => {
+router.delete('/:pid', validatorParams, async (req, res) => {
     try {
         const { pid } = req.params
 
