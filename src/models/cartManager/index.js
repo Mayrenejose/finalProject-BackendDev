@@ -1,4 +1,7 @@
 import fs from 'fs'
+import ProductManager from '../productManager/index.js'
+
+const productManager = new ProductManager()
 
 class CartManager {
 
@@ -21,7 +24,8 @@ class CartManager {
     getCartById = async(cid) => {
         try{
             const allData = await this.getAllCarts()
-            return allData.find(cart => cart.id === cid)
+            const cartArray = Array.isArray(allData) ? allData : [allData]
+            return cartArray.find(cart => cart.id === cid)
 
         } catch (error) {
             return console.log(error)
@@ -47,17 +51,43 @@ class CartManager {
             throw new Error('error')
         }
     }
+
+    addProductToCart = async(idCart, idProduct) => {
+        try {
+            const cartId = Number(idCart)
+            const productId = Number(idProduct)
+            const cart = await this.getCartById(cartId)
+            const product = await productManager.getProductById(productId)
+            let productsArray = cart.products
+
+            if ( product.length === 0 ) throw new Error('the product does not exist')
+
+            if (!Array.isArray(productsArray)) {
+                productsArray = [productsArray]
+            }
+
+            const searchIdProduct = productsArray.find((product) => product.id === productId)
+            const searchIdCart = cart.id === cartId ? true : false
+
+            if ( !searchIdCart ) throw new Error('the car does not exist')
+            
+            if ( searchIdProduct === undefined ) {
+                const newProductToCart = {
+                    id: productId,
+                    quantity: 1
+                }
+                cart.products.push(newProductToCart)
+            } else {
+                searchIdProduct.quantity++
+            }
+
+            await fs.promises.writeFile(this.path, JSON.stringify(cart, null, '\t'))
+
+        } catch (error) {
+            console.log(error, 'The product was not added to the cart')
+            throw new Error('error')
+        }
+    }
 }
-
-// const startUp = async() => {
-//     const cartManager = new CartManager()
-//     await cartManager.addCart([{hola: 'hoa', que: 'quetal'}, {hola: 'hoggga', que: 'quffetal'}])
-//     await cartManager.addCart([{hola: 'hfhgdgdfoa', que: 'quetffal'}, {hola: 'hoggga', que: 'quffetal'}])
-//     await cartManager.addCart([{hola: 'hdfgfsdfoa', que: 'qfffuetal'}])
-//     await cartManager.addCart([{hola: 'hoggga', que: 'quffetal'}])
-//  }
-
-// startUp()
-// console.log('hola');
 
 export default CartManager

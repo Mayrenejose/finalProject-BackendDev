@@ -11,7 +11,7 @@ router.get('/', async(req, res) => {
         const allDataCarts = await cartManager.getAllCarts()
         res.status(200).json({data: allDataCarts})
     } catch (error) {
-        res.status(500).send('error getting carts')
+        res.status(400).send({message: 'error getting carts'})
     }
 })
 
@@ -19,8 +19,9 @@ router.get('/:cid', validatorParams, async(req, res) => {
     try{
         const { cid } = req.params
         const data = await cartManager.getAllCarts()
-        const searchIdCart = data.some(cart => cart.id === Number(cid))
-
+        const dataArray = Array.isArray(data) ? data : [data]
+        const searchIdCart = dataArray.some(cart => cart.id === Number(cid))
+        
         if( !searchIdCart ) {
             return res.status(400).json({error: `Not found the id: ${cid} not exist`})
         } else {
@@ -29,7 +30,7 @@ router.get('/:cid', validatorParams, async(req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send('error getting cart')
+        res.status(400).send({message: 'error getting carts'})
     }
 })
 
@@ -37,10 +38,23 @@ router.post('/', async(req, res) => {
     try {
         const bodyGet = req.body
         await cartManager.addCart(bodyGet)
+        return res.status(200).json({ message: 'cart successfully added' })
+
+    } catch(error) {
+        res.status(400).send({error: 'error adding cart'})
+    }
+})
+
+router.post('/:cid/product/:pid', validatorParams, async(req, res) => {
+    try {
+        const idCart = req.params.cid
+        const idProduct = req.params.pid
+
+        await cartManager.addProductToCart(idCart, idProduct)
         return res.status(200).json({ message: 'product successfully added' })
 
     } catch(error) {
-        res.status(500).send({error: 'error adding product'})
+        res.status(400).send({error: 'error adding product'})
     }
 })
 
