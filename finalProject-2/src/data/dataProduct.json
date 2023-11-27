@@ -1,0 +1,35 @@
+[
+	
+    {
+		"category": "soy una categoria",
+		"code": "10007",
+		"description": "hola soy la descripcion",
+		"id": 1,
+		"price": 500,
+		"status": false,
+		"stock": 200,
+		"thumbnails": "kjfgvjhsdgfhsadf",
+		"title": "mal estado"
+		},
+		{
+		"category": "soy una categoria",
+		"code": "10010",
+		"description": "hola soy la descripcion",
+		"id": 2,
+		"price": 520,
+		"stock": 20,
+		"thumbnails": "kjfgvjhsdgfhsadf",
+		"title": "mal estado"
+		},
+		{
+		"category": "soy una categoria",
+		"code": "10011",
+		"description": "hola soy la descripcion",
+		"id": 4,
+		"price": 598,
+		"status": true,
+		"stock": 80,
+		"thumbnails": "kjfgvjhsdgfhsadf",
+		"title": "mal estado"
+		}
+]
