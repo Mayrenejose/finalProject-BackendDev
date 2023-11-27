@@ -1,14 +1,12 @@
 import { Router } from 'express'
-import ProductManager from '../../models/productManager/index.js'
-import checkExistingParameter from '../../middleware/checkExistingParameter/index.js'
+import ProductManager from '../../dao/managerMongoDB/productManager/index.js'
+import { io } from '../../app.js' 
 
 const router = Router()
-const productManager = new ProductManager()
-const validatorParams = checkExistingParameter('pid')
 
 router.get('/', async(req, res) => {
     try{
-        const allDataProducts = await productManager.getAllProducts()
+        const allDataProducts = await ProductManager.getAllProducts()
         const queryLimit = req.query?.limit
         if ( !queryLimit ) return res.json({data: allDataProducts})
 
@@ -24,18 +22,11 @@ router.get('/', async(req, res) => {
     }
 })
 
-router.get('/:pid', validatorParams, async(req, res) => {
+router.get('/:pid', async(req, res) => {
     try{
-        const data = await productManager.getAllProducts()
         const { pid } = req.params
-        const searchId = data.some(product => product.id === Number(pid))
-
-        if( !searchId ) {
-            return res.status(400).json({error: `Not found the id: ${pid} not exist`})
-        } else {
-            const dataById = await productManager.getProductById(Number(pid))
-            res.json({data: dataById})
-        }
+        const dataById = await ProductManager.getProductById(pid)
+        res.json({data: dataById})
     } catch (error) {
         res.status(500).send('error getting product')
     }
@@ -44,40 +35,53 @@ router.get('/:pid', validatorParams, async(req, res) => {
 router.post('/', async(req, res) => {
     try {
         const bodyGet = req.body
-        const addNewProduct = await productManager.addProduct(bodyGet)
-
+        const addNewProduct = await ProductManager.addProduct(bodyGet)
+        
         if ( addNewProduct === undefined ) {
-            return res.status(200).json({ message: 'product successfully added' })
-        } else {
+
             return res.status(400).json({error: 'non added product'})
+            
+        } else {
+            io.emit('view_products' , addNewProduct)
+
+            return res.status(200).json({ message: 'product successfully added' })
         }
     } catch(error) {
-        res.status(500).send('error adding product')
+        res.status(500).send({error: 'error adding product'})
     }
 })
 
-router.put('/:pid', validatorParams, async(req, res) => {
+router.put('/:pid', async(req, res) => {
     try{
         const { pid } = req.params
         const bodyUpdate = req.body
-        
-        await productManager.updateProduct(Number(pid), bodyUpdate)
-        res.status(200).json({ message: 'successfully updated product'})
+        const updateProduct = await ProductManager.updateProduct(pid, bodyUpdate)
+
+        if ( updateProduct.modifiedCount === 0 ) {
+            res.status(400).json({error: 'product not updated'})
+        } else {
+            res.status(200).json({ message: 'successfully updated product'})
+        }
 
     } catch (error) {
-        res.status(400).json({error: 'product not updated'})
+        res.status(500).json({error: 'server error'})
     }
 })
 
-router.delete('/:pid', validatorParams, async (req, res) => {
+router.delete('/:pid', async (req, res) => {
     try {
         const { pid } = req.params
-
-        await productManager.deleteProduct(Number(pid))
-        res.status(200).json({ message: 'Product successfully deleted' })
+        const deleteProduct = await ProductManager.deleteProduct(pid)
+        
+        if ( deleteProduct === 0 ) {
+            res.status(400).json({ error: 'Product not deleted' })
+        } else {
+            io.emit('delete_product', deleteProduct)
+            res.status(200).json({ message: 'Product successfully deleted' })
+        }
 
     } catch (error) {
-        res.status(400).json({ error: 'Product not deleted' })
+        res.status(500).json({ error: 'server error' })
     }
 })
 

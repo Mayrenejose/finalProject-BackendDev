@@ -1,5 +1,5 @@
 import fs from 'fs'
-import  propsValidation  from '../../utils/validationProps/index.js'
+import  propsValidation  from '../../../utils/validationProps/index.js'
 
 class ProductManager {
 
@@ -19,64 +19,34 @@ class ProductManager {
         }
     }
 
-    addProduct = async(
-        {
-            category,
-            code,
-            description,
-            price,
-            status = true,
-            stock,
-            thumbnails = [],
-            title
-        }
-    ) => {
-        if ( typeof thumbnails === 'string') {
-            thumbnails = [thumbnails]
-        } else if ( Array.isArray(thumbnails) ) {
-            thumbnails = [...thumbnails]
-        }
-
-        const props = {
-            category,
-            code, 
-            description, 
-            price, 
-            status: true,
-            stock,
-            thumbnails,
-            title,
-        }
-
-        const data = await this.getAllProducts()
-
+    addProduct = async( body ) => {
         try {
-            if (!await propsValidation(
-                data, 
-                this.path, 
-                props
-            )) return []
-
-            const newProduct = {
-                category,
-                code, 
-                description, 
-                id: this.nextId,
-                price, 
-                status,
-                stock, 
-                thumbnails, 
-                title
-            } 
-
-            this.products.push(newProduct)
-            this.nextId++
+            const data = await this.getAllProducts();
+    
+            for (const item of body) {
+                if (typeof item.thumbnails === 'string') {
+                    item.thumbnails = [item.thumbnails];
+                } else if (Array.isArray(item.thumbnails)) {
+                    item.thumbnails = [...item.thumbnails];
+                }
+    
+                item.status = true;
+                item.id = this.nextId;
+                const props = { ...item };
+                
+                if (!(await propsValidation(data, this.path, props))) return [];
+    
+                this.products.push(props);
+                this.nextId++;
+            }
 
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, '\t'))
-
+            return this.products
+            
         } catch(error) {
             return console.log(error, 'product creation failed')
         }
+        
     }
 
     getProductById = async(pid) => {
@@ -132,6 +102,7 @@ class ProductManager {
         
                 await fs.promises.writeFile(this.path, JSON.stringify(deleteProduct, null, 2))
                 console.log('Product deleted successfully')
+                return deleteProduct
             } else {
                 console.log('The ID does not exist')
                 throw new Error('Product not found')

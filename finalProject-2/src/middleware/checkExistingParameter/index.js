@@ -1,8 +1,8 @@
 const checkExistingParameter = (paramName) => {
     return (req, res, next) => {
-        const id = Number(req.params[paramName])
         
-        if ( !isNaN(id) ) {
+        if ( paramName ) {
+            console.log(paramName);
             next()
         } else {
             res.status(400).json({ error: 'invalid parameter' })
