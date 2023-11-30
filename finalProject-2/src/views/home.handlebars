@@ -7,7 +7,7 @@
     </div>
 
     <div class="bodyPage">
-        {{#each dataProducts}}
+        {{#each dataProducts.products}}
         <div class="boxProduct">
             <img src={{this.thumbnails.[0]}} alt="products" class="image">
 
@@ -21,4 +21,3 @@
     </div>
 </div>
 <script src="/js/home/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

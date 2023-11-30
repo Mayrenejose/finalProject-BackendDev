@@ -1,0 +1,60 @@
+<div>
+    <div class="boxTitle">
+        <h1>Productos</h1>
+        <div class="positionBtn">
+            <button class="btnChat" id="goChat">Ir al Chat</button>
+        </div>
+    </div>
+
+    <div>
+        <h3>Límite de productos:</h3>
+        <input id="limit" class="inputCls" type="text" value="{{dataProducts.limit}}" >
+        <button class="btnChat" id="btnLimit">Enviar</button>
+        <button class="btnChat" id="clearLimit">Limpiar</button>
+    </div>
+    <div>
+        <h2>Buscar por:</h2>
+        <h3>Nombre</h3>
+        <input type="text" id="searchQuery" class="inputCls" value="{{dataProducts.query}}">
+        <button class="btnChat" id="btnSearchQuery">Buscar</button>
+        <button class="btnChat" id="clearQuery">Limpiar</button>
+    </div>
+    <div> 
+        <h3>Disponibilidad</h3>       
+        <input type="checkbox" id="checkboxDisp">
+        <label for="checkboxDisp">sin stock</label>
+    </div>
+
+    <div>
+        <p>Página: {{dataProducts.page}} / {{dataProducts.totalPages}}</p>
+    </div>
+
+    <div class="bodyPage">
+        {{#each dataProducts.payload}}
+        <div class="boxProduct">
+            <img src={{this.thumbnails.[0]}} alt="products" class="image">
+
+            <div class="boxInfo">
+                <h2>{{this.title}}</h2>
+                <p>{{this.description}}</p>
+                <p>Precio: ${{this.price}}</p>
+            </div>
+        </div>
+    {{/each}}
+    </div>
+
+    <div class="pagination">
+        <a id="btnPrev" href="#" {{#unless dataProducts.hasPrevPage }}style="display: none;"{{/unless}}>
+            Anterior
+        </a>
+        <p>Producto {{dataProducts.limit}} de  {{dataProducts.totalDocs}}</p> 
+        <a id="btnNext" href="#" {{#unless dataProducts.hasNextPage }}style="display: none;"{{/unless}}>
+            Siguiente
+        </a>
+    </div>
+
+    <input id="prevPage" type="hidden" value="{{dataProducts.prevPage}}" >
+    <input id="nextPage" type="hidden" value="{{dataProducts.nextPage}}" >
+    <input id="page" type="hidden" value="{{dataProducts.page}}" >
+</div>
+<script src="/js/products/index.js"></script>

@@ -6,7 +6,10 @@ const router = Router()
 
 router.get('/', async(req, res) => {
     try{
-        const allDataProducts = await ProductManager.getAllProducts()
+        const page = parseInt(req.query?.page ?? 1)
+        const limit = parseInt(req.query?.limit ?? 10)
+
+        const allDataProducts = await ProductManager.getAllProducts( limit, page )
         const queryLimit = req.query?.limit
         if ( !queryLimit ) return res.json({data: allDataProducts})
 
