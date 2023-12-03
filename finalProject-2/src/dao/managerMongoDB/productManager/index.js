@@ -8,43 +8,43 @@ class ProductManager {
         query,
         previousPage,
         currentUrl,
-        stock = false
+        sortBy,
+        category
     ) => {
-        try{
-
-            console.log(stock,4);
-
+        try{   
             let search = {}
-            if (query) {
-                search = {
-                    $or: [
-                        { title: { $regex: new RegExp(query, 'i') } }
-                        ///{ stock: { $regex: new RegExp(query, 'i') } },
-                        // Añade más campos aquí si quieres buscar en varios campos
-                    ]
-                }
-            }
-
-            if (stock) {
-                search.stock = { $gt: 0 }
-            }
-    
-            //const search = query ? { title: { $regex: new RegExp(query, 'i') } } : {}
-            const nextURL = `${currentUrl}/products?limit=${limit}&page=${page + 1}&query=${query}`
             
-            const getProducts = await productModel.paginate(search, {
-                page,
-                limit,
-                lean: true
-            })
+            if (query) {
+                search.$or = [
+                    { title: { $regex: new RegExp(query, 'i') } }                    
+                ]
+            }
 
+            if(category) {
+                search.$or = [
+                    { category: { $regex: new RegExp(category, 'i') } }
+                ]
+            }
+            
+            const sortOptions = sortBy === 'asc' ? { price: 1 } : sortBy === 'desc' ? { price: -1 } : {}
+            
+            const options = {
+                page: page,
+                limit: limit,
+                sort: sortOptions,
+                lean: true
+            }
+            
+            const getProducts = await productModel.paginate(search, options)
+
+            const nextURL = `${currentUrl}/products?limit=${limit}&page=${page + 1}&query=${query}&sort=${sortBy}`       
             getProducts.payload = getProducts.docs
             delete getProducts.docs
             getProducts.query = query
             getProducts.status = 'success'
             getProducts.prevLink = getProducts.hasPrevPage ? previousPage  : null
             getProducts.nextLink = getProducts.hasNextPage ? nextURL : null
-            
+
             return getProducts
         } catch (error) {
             return console.log(error)

@@ -49,8 +49,15 @@ h2 {
 }
 
 .boxInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 6px;
     background-color: #e1e6e3;
+}
+
+.boxInfo button {
+    background-color: #ff7876;
 }
 
 .positionBtn {
@@ -122,13 +129,94 @@ h2 {
 }
 
 .boxMessages {
-    width: 100%;
-    max-width: 600px;
+    width: 50%;
+    max-width: 63 rem;
     margin: 0 auto; 
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 20px;
+    padding: 45px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     min-height: 500px;
+}
+
+.inputEmail {
+    display: flex;
+    justify-content: center;
+}
+
+.containerText {
+    display: flex;
+    flex-direction: column;
+}
+
+.containerText p {    
+    text-align: start;
+}
+
+.imgProduct {
+    width: 43.75rem;
+    height: auto;
+}
+
+.boxDescriptionProduct {
+    display: flex;
+    padding: 64px;
+    justify-content: center;
+}
+
+.boxInformationProduct {
+    padding: 64px;
+}
+
+.btnPagination {
+    font-size: 23px;
+    text-decoration: none;
+    color: black;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 72px;
+}
+
+.containerFilters {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 64px;
+}
+
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 8px 12px;
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    background-color: #fff;
+}
+
+.custom-select:hover {
+    border-color: #aaa; 
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.custom-select::after {
+    content: '\25BC'; 
+    position: absolute;
+    top: 50%;
+    right: 10px; 
+    transform: translateY(-50%);
+    pointer-events: none; 
+    color: #555; 
+}  
+
+.custom-select option:checked {
+    background-color: #f0f0f0;
 }

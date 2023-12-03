@@ -8,8 +8,8 @@ router.get('/', async(req, res) => {
     try{
         const page = parseInt(req.query?.page ?? 1)
         const limit = parseInt(req.query?.limit ?? 10)
-
-        const allDataProducts = await ProductManager.getAllProducts( limit, page )
+        const sort = req.query?.sort ?? 'asc'
+        const allDataProducts = await ProductManager.getAllProducts( limit, page, sort )
         const queryLimit = req.query?.limit
         if ( !queryLimit ) return res.json({data: allDataProducts})
 

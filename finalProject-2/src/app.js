@@ -32,7 +32,7 @@ mongoose.connect(url, {dbName: mongoDB})
     app.use(express.static(__dirname + '/public'))
     app.use('/api/products', routerProducts)
     app.use('/api/carts', routerCarts)
-    app.use('/', viewsHandlebars)
+    app.use('/view', viewsHandlebars)
     app.use('/chat', chatRouter)
 
     //sockets

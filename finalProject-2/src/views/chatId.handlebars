@@ -1,0 +1,20 @@
+<div>
+    <div class="boxTitle">
+        <h1>Chat</h1>
+    </div>
+
+    <div>
+        <h2>Hola {{email}}</h2>
+    </div>
+    
+    <div class="boxMessages">
+        <div id="message" class="containerText"></div>
+        <div class="mainChat">
+            <textarea id="messageId"class="textareaCls"></textarea>
+            <button type="submit" class="btnChat" id="sendMessage">enviar</button>
+        </div>
+    </div>
+    <input id="idUser" type="hidden" value={{idUser}}>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chatId/index.js" ></script>
