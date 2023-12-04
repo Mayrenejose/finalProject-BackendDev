@@ -46,5 +46,65 @@ router.post('/:cid/product/:pid', async(req, res) => {
     }
 })
 
+router.delete('/:cid', async(req, res) => {
+    try{
+        const { cid } = req.params
+        const deleteCartById = await CartManager.deleteAllProducts(cid)
+
+        if ( !deleteCartById ) {
+            res.status(400).send({message: 'error deleting carts'})
+        }
+        res.json({data: deleteCartById})
+    } catch (error) {
+        res.status(500).send({message: 'error server'})
+    }
+})
+
+router.delete('/:cid/product/:pid', async(req, res) => {
+    try{
+        const { cid } = req.params
+        const { pid } = req.params
+        const deleteProductById = await CartManager.deleteProduct(cid, pid)
+
+        if ( deleteProductById.modifiedCount === 0 ) {
+            res.status(400).send({message: 'error deleting product'})
+        }
+        
+        res.json({message: 'product successfully removed'})
+    } catch (error) {
+        res.status(500).send({message: 'error server'})
+    }
+})
+
+router.put('/:cid', async(req, res) => {
+    try{
+        const { cid } = req.params
+        const cartUpdate = req.body
+        const updateProducts = await CartManager.updateProductsInCart (cid, cartUpdate)
+        
+        if ( updateProducts.modifiedCount === 0 ) {
+            res.status(400).send({message: 'error updating carts'})
+        }
+        res.json({message: 'cart successfully updated'})
+    } catch (error) {
+        res.status(500).send({message: 'error server'})
+    }
+})
+
+router.put('/:cid/product/:pid', async(req, res) => {
+    try{
+        const { cid } = req.params
+        const { pid } = req.params
+        const quantityUpdate = req.body
+        const updateQuantity = await CartManager.updateQuantityInCart(cid, pid, quantityUpdate)
+        
+        if ( updateQuantity.modifiedCount === 0 ) {
+            res.status(400).send({message: 'error updating quantity in carts'})
+        }
+        res.json({message: 'quantity in cart successfully updated'})
+    } catch (error) {
+        res.status(500).send({message: 'error server'})
+    }
+})
 
 export default router
