@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { io } from '../../app.js' 
-import messageModel from '../../models/messages.models.js'
+import messageModel from '../../dao/models/messages.models.js'
 
 const router = Router()
 

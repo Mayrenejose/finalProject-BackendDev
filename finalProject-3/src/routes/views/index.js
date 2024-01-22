@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import ProductManager from '../../dao/managerMongoDB/productManager/index.js'
-import messageModel from '../../models/messages.models.js'
+import messageModel from '../../dao/models/messages.models.js'
 import sessionAct from '../../middleware/session/index.js'
 import authe from '../../middleware/auth/index.js'
 

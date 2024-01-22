@@ -3,14 +3,15 @@ import mongoose from "mongoose"
 
 let Cart
 let Products
+let Chat
 
 switch (config.persistence) {
     case 'FILE':
-        const { default: CartsManager } = await import('./managerFS/cartManager/index.js')
-        const { default: ProductsManager } = await import('./managerFS/productManager/index.js')
+        const { default: CartsManagerFile } = await import('./managerFS/cartManager/index.js')
+        const { default: ProductsManagerFile } = await import('./managerFS/productManager/index.js')
         console.log('Conectado FS')
-        Cart = CartsManager
-        Products = ProductsManager
+        Cart = CartsManagerFile
+        Products = ProductsManagerFile
 
         break
 
@@ -20,8 +21,10 @@ switch (config.persistence) {
 
         const { default: CartsManagerMongo } = await import('./managerMongoDB/cartManagerDB/index.js')
         const { default: ProductsManagerMongo } = await import('./managerMongoDB/productManager/index.js')
+        const { default: ChatManagerMongo } = await import('./managerMongoDB/chatManagerDB/index.js')
         Cart = CartsManagerMongo
         Products = ProductsManagerMongo
+        Chat =  ChatManagerMongo
         
         break
 
@@ -29,4 +32,4 @@ switch (config.persistence) {
         throw new Error('Persistence is not configured')
 }
 
-export {Cart, Products} 
+export {Cart, Products, Chat} 
