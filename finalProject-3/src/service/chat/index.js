@@ -13,11 +13,22 @@ export default class ChatService {
 
     addUser = async bodyUser => {return this.dao.addUser(bodyUser)}
 
-    addMessage = async(idUser,bodyMessage) => {
-        const userEmail = await this.dao.getMessage(idUser)
-        userEmail.message.push(bodyMessage)
+    addMessage = async (idUser, bodyMessage) => {
+        try {
+            const userEmail = await this.getMessage(idUser)
+            
+            if (userEmail) {
+                userEmail.message.push(bodyMessage)
 
-        const messageNew = await this.dao.addMessage(userEmail)
-        io.emit('chat_ecommerce' , messageNew)
+                const messageNew = await userEmail.save()
+                io.emit('chat_ecommerce', messageNew)
+                return messageNew
+            } else {
+                throw new Error('User not found')
+            }
+        } catch (error) {
+            console.error('Error in addMessage:', error);
+            throw error
+        }
     }
 }

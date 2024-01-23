@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 let Cart
 let Products
 let Chat
+let User
 
 switch (config.persistence) {
     case 'FILE':
@@ -22,9 +23,12 @@ switch (config.persistence) {
         const { default: CartsManagerMongo } = await import('./managerMongoDB/cartManagerDB/index.js')
         const { default: ProductsManagerMongo } = await import('./managerMongoDB/productManager/index.js')
         const { default: ChatManagerMongo } = await import('./managerMongoDB/chatManagerDB/index.js')
+        const { default: UserManagerMongo } = await import('./managerMongoDB/userManagerDB/index.js')
+
         Cart = CartsManagerMongo
         Products = ProductsManagerMongo
         Chat =  ChatManagerMongo
+        User = UserManagerMongo
         
         break
 
@@ -32,4 +36,9 @@ switch (config.persistence) {
         throw new Error('Persistence is not configured')
 }
 
-export {Cart, Products, Chat} 
+export {
+    Cart, 
+    Products, 
+    Chat,
+    User
+} 
