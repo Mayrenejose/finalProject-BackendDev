@@ -44,6 +44,7 @@ export const addRegister =  async(req, res) => {
 }
 
 export const addLogin = async (req, res) => {
+    console.log(req,44);
     if (!req.user) return res.status(400).send('Invalid Credentiasls')
 
     req.session.user = req.user

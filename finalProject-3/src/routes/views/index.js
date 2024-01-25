@@ -1,8 +1,7 @@
 import { Router } from 'express'
-import ProductManager from '../../dao/managerMongoDB/productManager/index.js'
-import messageModel from '../../dao/models/messages.models.js'
 import sessionAct from '../../middleware/session/index.js'
 import authe from '../../middleware/auth/index.js'
+import { ProductService, ChatService } from '../../service/index.js'
 
 const router = Router()
 
@@ -41,7 +40,7 @@ router.get('/login', sessionAct, async(req, res) => {
 
 router.get('/chat', async(req, res) => {
     try {
-        const allUsers = await messageModel.find()        
+        const allUsers = await ChatService.getAllUsers()        
         res.render('chat', {
             allUsers,
             style: 'index.css',
@@ -56,7 +55,7 @@ router.get('/chat', async(req, res) => {
 router.get('/chat/:id', async(req, res) => {
     try {
         const idUser = req.params?.id
-        const userInformation = await messageModel.findById(idUser)
+        const userInformation = await ChatService.getMessage(idUser)
         const email = userInformation.email
         const textMsj = userInformation.message
                 
@@ -84,7 +83,7 @@ router.get('/products', authe, async(req, res) => {
         const previousPage = req.get('Referer')
         const currentUrl = `${req.protocol}://${req.get('host')}`        
        
-        const dataProducts = await ProductManager.getAllProducts(
+        const dataProducts = await ProductService.getAllProducts(
             limit, 
             page,
             query,
@@ -109,7 +108,7 @@ router.get('/products', authe, async(req, res) => {
 router.get('/product/:_id', async(req, res) => {
     try {   
         const idProduct = req.params?._id
-        const infoProduct = await ProductManager.getProductById(idProduct)
+        const infoProduct = await ProductService.getProductById(idProduct)
         const titleProduct = infoProduct.title
         const image = infoProduct.thumbnails
         const description = infoProduct.description
@@ -140,7 +139,7 @@ router.get('/:site', async(req, res) => {
         const page = parseInt(req.query?.page ?? 1)
         const query = req.query?.query ?? ''
         const renderParameter = params === 'home' ? 'home' : 'realTimeProducts'
-        const dataProducts = await ProductManager.getAllProducts(
+        const dataProducts = await ProductService.getAllProducts(
             limit, 
             page,
             query,

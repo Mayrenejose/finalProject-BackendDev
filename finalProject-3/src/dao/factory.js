@@ -5,6 +5,7 @@ let Cart
 let Products
 let Chat
 let User
+let Ticket
 
 switch (config.persistence) {
     case 'FILE':
@@ -24,11 +25,13 @@ switch (config.persistence) {
         const { default: ProductsManagerMongo } = await import('./managerMongoDB/productManager/index.js')
         const { default: ChatManagerMongo } = await import('./managerMongoDB/chatManagerDB/index.js')
         const { default: UserManagerMongo } = await import('./managerMongoDB/userManagerDB/index.js')
+        const { default: TicketManagerMongo } = await import('./managerMongoDB/ticketManagerDB/index.js')
 
         Cart = CartsManagerMongo
         Products = ProductsManagerMongo
         Chat =  ChatManagerMongo
         User = UserManagerMongo
+        Ticket = TicketManagerMongo
         
         break
 
@@ -40,5 +43,6 @@ export {
     Cart, 
     Products, 
     Chat,
-    User
+    User,
+    Ticket
 } 

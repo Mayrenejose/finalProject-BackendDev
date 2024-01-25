@@ -9,11 +9,13 @@ import {
     updateProductsInCart,
     updateQuantityInCart
 } from '../../controllers/cart/index.js'
+import { createTicket } from '../../controllers/ticket/index.js'
 
 const router = Router()
 
 router.get('/', getAllCarts)
 router.get('/:cid', getCartById) 
+router.post('/:cid/purchase', createTicket)
 router.post('/', addCart) 
 router.post('/:cid/product/:pid', addProductToCart) 
 router.delete('/:cid', deleteAllProducts)
