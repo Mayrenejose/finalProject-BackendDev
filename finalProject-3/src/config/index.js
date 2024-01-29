@@ -1,11 +1,14 @@
 import passport from "passport"
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
+import passportJWT from 'passport-jwt'
 import UserModel from '../dao/models/user.models.js'
 import { createHash, isValidPassword } from '../utils/validationHash/index.js'
 import config from "./config.js"
 
 const LocalStrategy = local.Strategy
+const JWTStrategy = passportJWT.Strategy
+const ExtractJwt = passportJWT.ExtractJwt;
 
 const initialize = () => {
 
@@ -90,6 +93,24 @@ const initialize = () => {
         }
     }))
 
+    const jwtOptions = {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: config.secretKey
+    }
+ 
+    passport.use(
+        new JWTStrategy(jwtOptions, async(jwtPayload, done) => {
+
+        const user = await UserModel.findById(jwtPayload.user._id)
+    
+        if (user) {
+            return done(null, user)
+        }
+    
+        return done(null, false)
+        })
+    )
+    
     passport.serializeUser((user, done) => {
         done(null, user._id)
     })

@@ -1,21 +1,20 @@
 import { UserService } from "../../service/index.js"
 import { createHash } from '../../utils/validationHash/index.js'
 import  UserInsertDTO  from '../../dto/user/index.js'
+import jwt from 'jsonwebtoken';
+import config from '../../config/config.js'
+
+const SECRET_JWT = config.secretKey
 
 export const getCurrent = async (req, res) => {
     try {
-        let userData
-
-        if (req.isAuthenticated()) {
-            userData = new UserInsertDTO(req.user)
-        } else if (req.session.user) {
-            userData = new UserInsertDTO(req.session.user)
-        } else {
-            return res.status(401).json({ error: 'User not authenticated' })
-        }
-        res.status(200).json({ data: userData })
+        const userData = new UserInsertDTO(req.user)
+        
+        res.status(200).json({ data:userData })
+        
     } catch (error) {
         res.status(500).send('Error server')
+
     }
 }
 
@@ -43,12 +42,19 @@ export const addRegister =  async(req, res) => {
     }
 }
 
+
 export const addLogin = async (req, res) => {
-    console.log(req,44);
+    console.log(req.user)
     if (!req.user) return res.status(400).send('Invalid Credentiasls')
 
-    req.session.user = req.user
-    return res.redirect('/products')
+    //req.session.user = req.user
+       
+    // generate a signed son web token with the contents of user object and return it in the response
+    const token = jwt.sign({user: req.user }, SECRET_JWT, { expiresIn: '1h' });
+
+    res.json({token})
+           
+    //return res.redirect('/products')
 }
 
 export const loginGithub = function(req, res) {

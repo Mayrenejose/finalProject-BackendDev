@@ -8,13 +8,16 @@ const ticketSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    purchase_datetime: {
-        timestamps: true
-    },
+    //timestamps: true,
+    // purchase_datetime: {
+    //     timestamps: true
+    // },
+    purchase_datetime: String,
     amount: Number,
     purchaser: {
-        type:  mongoose.Schema.Types.email,
-        ref: 'users'
+        type: String
+        //type:  mongoose.Schema.Types.email,
+        //ref: 'users'
     }
 })
 

@@ -1,4 +1,4 @@
-import ProductManager from '../../dao/managerMongoDB/productManager/index.js'
+import { ProductService } from '../../service/index.js'
 
 export default class CartRepository {
     constructor(dao) {
@@ -14,7 +14,7 @@ export default class CartRepository {
     addProductToCart = async(idCart, idProduct) => {
         try {
             const cart = await this.getCartById(idCart)
-            const product = await ProductManager.getProductById(idProduct)
+            const product = await ProductService.getProductById(idProduct)
             const searchIdCart = cart._id == idCart ? true : false
             
             const searchIdProduct = cart.products.find(

@@ -1,11 +1,12 @@
 import { Router } from 'express'
-import sessionAct from '../../middleware/session/index.js'
-import authe from '../../middleware/auth/index.js'
+//import sessionAct from '../../middleware/session/index.js'
+//import authe from '../../middleware/auth/index.js'
 import { ProductService, ChatService } from '../../service/index.js'
+import passport from 'passport'
 
 const router = Router()
 
-router.get('/', sessionAct, async(req, res) => {
+router.get('/', async(req, res) => {
     try { 
         return res.redirect('/login')
 
@@ -14,7 +15,7 @@ router.get('/', sessionAct, async(req, res) => {
     }
 })
 
-router.get('/register', sessionAct, async(req, res) => {
+router.get('/register', async(req, res) => {
     try {        
         res.render('register', {
             style: 'index.css',
@@ -26,7 +27,7 @@ router.get('/register', sessionAct, async(req, res) => {
     }
 })
 
-router.get('/login', sessionAct, async(req, res) => {
+router.get('/login', async(req, res) => {
     try {      
         res.render('login', {
             style: 'index.css',
@@ -38,7 +39,7 @@ router.get('/login', sessionAct, async(req, res) => {
     }
 })
 
-router.get('/chat', async(req, res) => {
+router.get('/chat', passport.authenticate('jwt', {session: false}), async(req, res) => {
     try {
         const allUsers = await ChatService.getAllUsers()        
         res.render('chat', {
@@ -52,7 +53,7 @@ router.get('/chat', async(req, res) => {
     }
 })
 
-router.get('/chat/:id', async(req, res) => {
+router.get('/chat/:id', passport.authenticate('jwt', {session: false}), async(req, res) => {
     try {
         const idUser = req.params?.id
         const userInformation = await ChatService.getMessage(idUser)
@@ -72,9 +73,9 @@ router.get('/chat/:id', async(req, res) => {
     }
 })
 
-router.get('/products', authe, async(req, res) => {
+router.get('/products', passport.authenticate('jwt', {session: false}), async(req, res) => {
     try {
-        const user = req.session?.user
+        const user = req.user
         const limit = parseInt(req.query?.limit ?? 10)
         const page = parseInt(req.query?.page ?? 1)
         const query = req.query?.query ?? ''
@@ -105,7 +106,7 @@ router.get('/products', authe, async(req, res) => {
     }
 })
 
-router.get('/product/:_id', async(req, res) => {
+router.get('/product/:_id', passport.authenticate('jwt', {session: false}), async(req, res) => {
     try {   
         const idProduct = req.params?._id
         const infoProduct = await ProductService.getProductById(idProduct)
@@ -132,7 +133,7 @@ router.get('/product/:_id', async(req, res) => {
     }
 })
 
-router.get('/:site', async(req, res) => {
+router.get('/:site', passport.authenticate('jwt', {session: false}), async(req, res) => {
     try {
         const params = req.params?.site
         const limit = parseInt(req.query?.limit ?? 2)

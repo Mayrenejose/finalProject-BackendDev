@@ -1,4 +1,4 @@
-import { TicketService } from "../../service"
+import { TicketService } from "../../service/index.js"
 
 export const createTicket = async(req, res) => {
     try{
@@ -8,6 +8,7 @@ export const createTicket = async(req, res) => {
         return res.status(200).json({ message: 'ticket successfully create', data: bodyGet })
 
     } catch (error) {
+        console.log(error);
         res.status(400).send({message: 'error adding ticket'})
     }
 }
