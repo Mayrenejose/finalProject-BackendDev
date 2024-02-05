@@ -3,7 +3,7 @@ const urlChat = 'http://localhost:8080/chat'
 const select = document.querySelector('#priceOrder')
 const selectCategory = document.querySelector('#categorySearch')
 const btnViewProduct = document.querySelectorAll('#plusBtn')
-console.log(btnViewProduct);
+
 let query = ''
 
 btnViewProduct.forEach(button => {

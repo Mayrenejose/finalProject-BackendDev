@@ -1,6 +1,4 @@
 import { Router } from 'express'
-//import sessionAct from '../../middleware/session/index.js'
-//import authe from '../../middleware/auth/index.js'
 import { ProductService, ChatService } from '../../service/index.js'
 import passport from 'passport'
 

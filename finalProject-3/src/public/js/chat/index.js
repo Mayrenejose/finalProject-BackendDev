@@ -16,7 +16,7 @@ const addNewUser = (email) => {
         window.location = `${ubication}/${data.data._id}`
     })
     .catch(error => {
-        console.error('error:', error);
+        console.error('error:', error)
     })
 } 
 

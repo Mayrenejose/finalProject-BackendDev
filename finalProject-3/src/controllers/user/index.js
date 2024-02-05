@@ -42,18 +42,11 @@ export const addRegister =  async(req, res) => {
     }
 }
 
-
 export const addLogin = async (req, res) => {
-    console.log(req.user)
     if (!req.user) return res.status(400).send('Invalid Credentiasls')
-
-    //req.session.user = req.user
-       
-    // generate a signed son web token with the contents of user object and return it in the response
-    const token = jwt.sign({user: req.user }, SECRET_JWT, { expiresIn: '1h' });
-
-    res.json({token})
-           
+    const token = jwt.sign({user: req.user }, SECRET_JWT, { expiresIn: '24h' });
+   
+    res.json({token})           
     //return res.redirect('/products')
 }
 
